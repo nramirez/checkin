@@ -9,7 +9,7 @@ interface Props {
 }
 
 const AdminPage: NextPage<Props> = ({ userAgent, starts }) =>
-    <body>
+    <div>
         <Navbar />
         <section >
             <h1> Hermoso Demo! It updates when I save :hearts: </h1>
@@ -19,7 +19,8 @@ const AdminPage: NextPage<Props> = ({ userAgent, starts }) =>
         <footer>
             Something is not working as you expect https://github.com/nramirez/checkin
         </footer>
-    </body>;
+
+    </div>;
 
 AdminPage.getInitialProps = async ({ req }) => {
     const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;

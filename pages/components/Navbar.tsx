@@ -1,11 +1,25 @@
-import styles from './Navbar.styl';
+import css from './Navbar.styl';
+import Link from 'next/link';
 
 const Nabvar = (): JSX.Element => {
-    return <nav className={styles.navbar}>
+    return <nav className={css.navbar}>
         <ul>
-            <li>Organizations</li>
-            <li>Users</li>
-            <li>Events</li>
+            <li>
+                <Link href="/">
+                    <a>Organizations</a>
+                </Link>
+
+            </li>
+            <li>
+                <Link href="/">
+                    <a>Users</a>
+                </Link>
+            </li>
+            <li>
+                <Link href="/">
+                    <a>Events                       </a>
+                </Link>
+            </li>
         </ul>
     </nav>
 };
