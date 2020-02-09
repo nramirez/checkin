@@ -1,13 +1,13 @@
 import { NextPage } from 'next';
-import { Navbar, Page } from './components/navbar';
 import './organizations.styl';
+import { Navbar, Page } from './components/navbar';
 
 interface Organization {
     id: number;
     name: string;
     enabled: boolean;
-
 }
+
 const organizations: Organization[] = [
     {
         id: 1,
@@ -24,6 +24,12 @@ const organizations: Organization[] = [
 let Organization: NextPage<{}> = () => {
     return <div>
         <Navbar active={Page.Organizations} />
+        <section className="add-new">
+            <input type="text" placeholder="Organization Name"/>
+            <button>
+                Add New
+            </button>
+        </section>
         <section>
             <table className="table">
                 <thead>
