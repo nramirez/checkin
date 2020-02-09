@@ -5,10 +5,14 @@
   "main": "index.js",
   "dependencies": {
     "@zeit/next-stylus": "^1.0.1",
+    "apollo-server": "^2.10.0",
+    "apollo-server-micro": "^2.10.0",
+    "graphql": "^14.6.0",
     "isomorphic-unfetch": "^3.0.0",
     "poststylus": "^1.0.0",
     "save-dev": "0.0.1-security",
-    "stylus": "^0.54.7"
+    "stylus": "^0.54.7",
+    "urql": "^1.8.2"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
