@@ -1,7 +1,7 @@
 
 import { NextPage } from 'next';
 import fetch from 'isomorphic-unfetch';
-import Navbar from './components/Navbar';
+import { Navbar, Page} from './components/navbar';
 
 interface Props {
     starts: number;
@@ -10,7 +10,7 @@ interface Props {
 
 const AdminPage: NextPage<Props> = ({ userAgent, starts }) =>
     <div>
-        <Navbar />
+        <Navbar active={Page.Users} />
         <section >
             <h1> Hermoso Demo! It updates when I save :hearts: </h1>
             Your user agent: {userAgent}  <br />
