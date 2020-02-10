@@ -21,7 +21,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        Organization(id: ID!): Organization
+        organization(id: ID!): Organization
     }
 `;
 
