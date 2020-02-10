@@ -21,9 +21,11 @@ const typeDefs = gql`
     }
 
     type Query {
-        organization(id: ID!): Organization
+        allOrganizations: [Organization]
     }
 `;
+
+
 
 const apolloServer = new ApolloServer({
     typeDefs,

@@ -12,22 +12,21 @@ interface Organization {
 }
 
 interface OrganizationData {
-    organizations: Organization[]
+    allOrganizations: Organization[]
 }
 
 const Get_Organizations = gql`
   {
-      organization {
-          id
-          name
-          enabled
-      }
+    allOrganizations {
+        id
+        name
+        enabled
+    }
   }
 `;
 
 let OrganizationPage: NextPage<{}> = () => {
     let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
-    console.log(data);
 
     return <div>
         <Navbar active={Page.Organizations} />
@@ -50,7 +49,7 @@ let OrganizationPage: NextPage<{}> = () => {
                         <tr>
                             <td colSpan={2}>Loading...</td>
                         </tr>
-                        : data.organizations.map(o =>
+                        : data.allOrganizations.map(o =>
                             <tr key={o.id}>
                                 <td>{o.name}</td>
                                 <td><input type="checkbox" defaultChecked={o.enabled} /></td>
