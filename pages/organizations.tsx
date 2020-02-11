@@ -1,9 +1,13 @@
+import React from 'react';
 import { NextPage } from 'next';
-import './organizations.styl';
-import { Navbar, Page } from './components/navbar';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
 import withApollo from '../lib/withAppollo';
+import gql from 'graphql-tag';
+
+import './organizations.styl';
+
+import { useQuery } from '@apollo/react-hooks';
+import { Navbar, Page } from './components/navbar';
+
 
 interface Organization {
     id: number;
@@ -12,12 +16,12 @@ interface Organization {
 }
 
 interface OrganizationData {
-    allOrganizations: Organization[]
+    organizations: Organization[]
 }
 
 const Get_Organizations = gql`
   {
-    allOrganizations {
+    organizations {
         id
         name
         enabled
@@ -28,7 +32,7 @@ const Get_Organizations = gql`
 let OrganizationPage: NextPage<{}> = () => {
     let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
 
-    return <div>
+    return <React.Fragment>
         <Navbar active={Page.Organizations} />
         <section className="add-new">
             <input type="text" placeholder="Organization Name" />
@@ -49,7 +53,7 @@ let OrganizationPage: NextPage<{}> = () => {
                         <tr>
                             <td colSpan={2}>Loading...</td>
                         </tr>
-                        : data.allOrganizations.map(o =>
+                        : data.organizations.map(o =>
                             <tr key={o.id}>
                                 <td>{o.name}</td>
                                 <td><input type="checkbox" defaultChecked={o.enabled} /></td>
@@ -57,7 +61,7 @@ let OrganizationPage: NextPage<{}> = () => {
                 </tbody>
             </table>
         </section>
-    </div>
+    </React.Fragment>
 }
 
 OrganizationPage.getInitialProps = async ({ req }) => {

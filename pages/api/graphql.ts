@@ -1,31 +1,5 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
-
-const typeDefs = gql`
-    type Organization {
-        id: ID!
-        name: String
-        enabled: Boolean
-    }
-
-    input OrganizationInput {
-        name: String!
-        enabled: Boolean
-    }
-
-    type OrganizationPayload {
-        organization: Organization
-    }
-
-    type Mutation {
-        createOrganization(input: OrganizationInput!): OrganizationPayload!
-    }
-
-    type Query {
-        allOrganizations: [Organization]
-    }
-`;
-
-
+import { ApolloServer } from 'apollo-server-micro';
+import typeDefs from './typeDefs';
 
 const apolloServer = new ApolloServer({
     typeDefs,
