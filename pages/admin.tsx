@@ -10,7 +10,7 @@ interface Props {
 
 const AdminPage: NextPage<Props> = ({ userAgent, starts }) =>
     <div>
-        <Navbar active={Page.Users} />
+        <Navbar />
         <section >
             <h1> Hermoso Demo! It updates when I save :hearts: </h1>
             Your user agent: {userAgent}  <br />

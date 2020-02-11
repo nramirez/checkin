@@ -1,5 +1,9 @@
-import Link from 'next/link';
-import './styles.styl';
+import { makeStyles } from '@material-ui/core/styles';
+import { useState } from 'react';
+import { Paper, Tabs, Tab } from '@material-ui/core';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
+import BusinessIcon from '@material-ui/icons/Business';
+import EventIcon from '@material-ui/icons/Event';
 
 export enum Page {
     Organizations,
@@ -7,32 +11,35 @@ export enum Page {
     Events
 }
 
-interface Props {
-    active: Page
-}
+const useStyles = makeStyles({
+    root: {
+        flexGrow: 1,
+        maxWidth: 500,
+    }
+});
 
-const linkClassName = (props: Props, page: Page): string =>
-    props.active === page ? 'active' : '';
+export const Navbar = (): JSX.Element => {
+    const classes = useStyles();
+    const [value, setValue] = useState(0);
 
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setValue(newValue);
+    };
 
-export const Navbar = (props: Props): JSX.Element => {
-    return <nav className="navbar">
-        <ul>
-            <li className={linkClassName(props, Page.Organizations)}>
-                <Link href="/">
-                    <a>Organizations</a>
-                </Link>
-            </li>
-            <li className={linkClassName(props, Page.Users)}>
-                <Link href="/">
-                    <a>Users</a>
-                </Link>
-            </li>
-            <li className={linkClassName(props, Page.Events)}>
-                <Link href="/">
-                    <a>Events</a>
-                </Link>
-            </li>
-        </ul>
-    </nav>
+    return (
+        <Paper square className={classes.root}>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="fullWidth"
+                indicatorColor="secondary"
+                textColor="secondary"
+                aria-label="top navbar actions" >
+
+                <Tab icon={<BusinessIcon />} label="Organizations" />
+                <Tab icon={<PersonPinIcon />} label="Users" />
+                <Tab icon={<EventIcon />} label="Events" />
+            </Tabs>
+        </Paper>
+    );
 };

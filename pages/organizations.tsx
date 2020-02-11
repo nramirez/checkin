@@ -3,8 +3,6 @@ import { NextPage } from 'next';
 import withApollo from '../lib/withAppollo';
 import gql from 'graphql-tag';
 
-import './organizations.styl';
-
 import { useQuery } from '@apollo/react-hooks';
 import { Navbar, Page } from './components/navbar';
 
@@ -33,7 +31,7 @@ let OrganizationPage: NextPage<{}> = () => {
     let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
 
     return <Fragment>
-        <Navbar active={Page.Organizations} />
+        <Navbar />
         <section className="add-new">
             <input type="text" placeholder="Organization Name" />
             <button>
