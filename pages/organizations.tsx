@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import { NextPage } from 'next';
 import withApollo from '../lib/withAppollo';
 import gql from 'graphql-tag';
@@ -32,7 +32,7 @@ const Get_Organizations = gql`
 let OrganizationPage: NextPage<{}> = () => {
     let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
 
-    return <React.Fragment>
+    return <Fragment>
         <Navbar active={Page.Organizations} />
         <section className="add-new">
             <input type="text" placeholder="Organization Name" />
@@ -61,7 +61,7 @@ let OrganizationPage: NextPage<{}> = () => {
                 </tbody>
             </table>
         </section>
-    </React.Fragment>
+    </Fragment>
 }
 
 OrganizationPage.getInitialProps = async ({ req }) => {
