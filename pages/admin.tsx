@@ -1,37 +1,36 @@
 
 import { NextPage } from 'next';
-import fetch from 'isomorphic-unfetch';
-import { Navbar, Page} from './components/navbar';
+import { Navbar, Page } from './components/navbar';
+import { Fragment, useState } from 'react';
+import { TabPanel } from './components/TabPanel';
+import withApollo from '../lib/withAppollo';
+import { OrganizationPage } from './components/organizations';
+import { Members } from './components/members';
+import { Events } from './components/events';
 
-interface Props {
-    starts: number;
-    userAgent?: string;
+const AdminPage: NextPage<{}> = () => {
+    const [value, setValue] = useState(0);
+
+    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setValue(newValue);
+    };
+
+    return <Fragment>
+        <Navbar value={value} handleTabChange={handleTabChange} />
+        <TabPanel value={value} index={Page.Organizations}>
+            <OrganizationPage />
+        </TabPanel>
+        <TabPanel value={value} index={Page.Members}>
+            <Members />
+        </TabPanel>
+        <TabPanel value={value} index={Page.Events}>
+            <Events />
+        </TabPanel>
+    </Fragment>;
 }
-
-const AdminPage: NextPage<Props> = ({ userAgent, starts }) =>
-    <div>
-        <Navbar />
-        <section >
-            <h1> Hermoso Demo! It updates when I save :hearts: </h1>
-            Your user agent: {userAgent}  <br />
-            Next stars: {starts}
-        </section>
-        <footer>
-            Something is not working as you expect https://github.com/nramirez/checkin
-        </footer>
-
-    </div>;
 
 AdminPage.getInitialProps = async ({ req }) => {
-    const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
-    const res = await fetch('https://api.github.com/repos/zeit/next.js');
-
-    const json = await res.json();
-    return {
-        starts: json.stargazers_count,
-        userAgent: userAgent
-    };
+    return {};
 }
 
-
-export default AdminPage;
+export default withApollo(AdminPage);

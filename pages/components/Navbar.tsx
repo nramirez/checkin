@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
 import { Paper, Tabs, Tab } from '@material-ui/core';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import BusinessIcon from '@material-ui/icons/Business';
@@ -7,8 +6,13 @@ import EventIcon from '@material-ui/icons/Event';
 
 export enum Page {
     Organizations,
-    Users,
+    Members,
     Events
+}
+
+export interface NavbarProps {
+    value: Page;
+    handleTabChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
 }
 
 const useStyles = makeStyles({
@@ -19,26 +23,20 @@ const useStyles = makeStyles({
     }
 });
 
-export const Navbar = (): JSX.Element => {
+export const Navbar = ({ value, handleTabChange }: NavbarProps): JSX.Element => {
     const classes = useStyles();
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
-    };
-
     return (
         <Paper square className={classes.root}>
             <Tabs
                 value={value}
-                onChange={handleChange}
+                onChange={handleTabChange}
                 variant="fullWidth"
                 indicatorColor="secondary"
                 textColor="secondary"
                 aria-label="top navbar actions" >
 
                 <Tab icon={<BusinessIcon />} label="Organizations" />
-                <Tab icon={<PersonPinIcon />} label="Users" />
+                <Tab icon={<PersonPinIcon />} label="Members" />
                 <Tab icon={<EventIcon />} label="Events" />
             </Tabs>
         </Paper>

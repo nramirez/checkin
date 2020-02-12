@@ -1,6 +1,6 @@
 
 const HomePage = (): JSX.Element =>{
-    return <div>Wow que hermoso!</div>
+    return <div>Love NextJS + React + GraphQL</div>
 }
 
 export default HomePage;

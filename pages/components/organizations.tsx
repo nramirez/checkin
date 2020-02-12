@@ -1,11 +1,7 @@
 import { Fragment } from 'react';
-import { NextPage } from 'next';
-import withApollo from '../lib/withAppollo';
 import gql from 'graphql-tag';
 
 import { useQuery } from '@apollo/react-hooks';
-import { Navbar, Page } from './components/navbar';
-
 
 interface Organization {
     id: number;
@@ -27,11 +23,10 @@ const Get_Organizations = gql`
   }
 `;
 
-let OrganizationPage: NextPage<{}> = () => {
+export const OrganizationPage = (): JSX.Element => {
     let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
 
     return <Fragment>
-        <Navbar />
         <section className="add-new">
             <input type="text" placeholder="Organization Name" />
             <button>
@@ -61,10 +56,3 @@ let OrganizationPage: NextPage<{}> = () => {
         </section>
     </Fragment>
 }
-
-OrganizationPage.getInitialProps = async ({ req }) => {
-    return {};
-}
-
-
-export default withApollo(OrganizationPage);
