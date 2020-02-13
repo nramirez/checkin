@@ -4,7 +4,7 @@ import { Navbar, Page } from './components/navbar';
 import { Fragment, useState } from 'react';
 import { TabPanel } from './components/TabPanel';
 import withApollo from '../lib/withAppollo';
-import { OrganizationPage } from './components/organizations';
+import { Organizations } from './components/organizations';
 import { Members } from './components/members';
 import { Events } from './components/events';
 
@@ -18,7 +18,7 @@ const AdminPage: NextPage<{}> = () => {
     return <Fragment>
         <Navbar value={value} handleTabChange={handleTabChange} />
         <TabPanel value={value} index={Page.Organizations}>
-            <OrganizationPage />
+            <Organizations />
         </TabPanel>
         <TabPanel value={value} index={Page.Members}>
             <Members />
