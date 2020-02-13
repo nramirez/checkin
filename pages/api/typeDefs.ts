@@ -16,11 +16,26 @@ export default gql`
         organization: Organization
     }
 
+    type OrganizationConnection {
+        edges: [OrganizationEdge]
+        pageInfo: PageInfo
+    }
+
+    type PageInfo {
+        endCursor: ID!
+        hasNextPage: Boolean!
+    }
+
+    type OrganizationEdge {
+        cursor: ID!
+        node: Organization!
+    }
+
     type Mutation {
         addOrganization(input: OrganizationInput!): OrganizationPayload!
     }
 
     type Query {
-        organizations: [Organization]
+        organizations(first: Int!, cursor: ID): OrganizationConnection
     }
 `;

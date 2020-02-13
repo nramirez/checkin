@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Paper } from '@material-ui/core';
-import { VirtualizedTable } from './tables';
 
 interface Organization {
     id: number;
@@ -30,12 +29,6 @@ export const Organizations = (): JSX.Element => {
 
     return (
         <Paper style={{ width: '100%', height: 400 }}>
-            <VirtualizedTable
-            rowCount={}
-            
-            >
-
-            </VirtualizedTable>
             <section className="add-new">
                 <input type="text" placeholder="Organization Name" />
                 <button>
@@ -63,5 +56,6 @@ export const Organizations = (): JSX.Element => {
                     </tbody>
                 </table>
             </section>
-    </Fragment>
+        </Paper>
+    )
 }
