@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import { ApolloQueryResult } from 'apollo-client/core/types';
 
 const GET_ORGANIZATIONS = gql`
 query getOrganizations($cursor: ID) {
@@ -16,18 +17,28 @@ query getOrganizations($cursor: ID) {
     }
   }
 }
-`
+`;
 
-function useOrganizations() {
+export interface OrganizationsResult {
+  organizations: Organization[];
+  hasNextPage?: boolean;
+  loading: boolean;
+  loadMore?: () => Promise<ApolloQueryResult<any>>
+}
+
+const useOrganizations = (): OrganizationsResult => {
   const {
     data,
     loading,
     fetchMore,
   } = useQuery(GET_ORGANIZATIONS, {
     notifyOnNetworkStatusChange: true,
-  })
+  });
 
-  if (loading && !data.persons) return { loading, persons: [] }
+  if (loading && !data.organizations) return {
+    loading,
+    organizations: []
+  };
 
   const loadMore = () => {
     return fetchMore({

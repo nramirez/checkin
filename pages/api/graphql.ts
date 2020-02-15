@@ -5,12 +5,6 @@ const { random, name } = faker;
 
 const range = (size, callback) => Array.from({ length: size }, callback);
 
-interface Organization {
-    id: string;
-    name: string;
-    enabled: boolean;
-}
-
 const resolvers = {
     Query: {
         organizations: (query, { cursor, first }) => {

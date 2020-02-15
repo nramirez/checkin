@@ -1,61 +1,47 @@
-import { Fragment } from 'react';
-import gql from 'graphql-tag';
-
-import { useQuery } from '@apollo/react-hooks';
-import { Paper } from '@material-ui/core';
-
-interface Organization {
-    id: number;
-    name: string;
-    enabled: boolean;
-}
-
-interface OrganizationData {
-    organizations: Organization[]
-}
-
-const Get_Organizations = gql`
-  {
-    organizations {
-        id
-        name
-        enabled
-    }
-  }
-`;
+import { Paper, List, ListItem } from '@material-ui/core';
+import useOrganizations from '../hooks/organizations.hooks';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import InfiniteLoader from 'react-window-infinite-loader';
 
 export const Organizations = (): JSX.Element => {
-    let { loading, data } = useQuery<OrganizationData>(Get_Organizations);
+    const { organizations, loading, loadMore, hasNextPage } = useOrganizations();
+    const count = hasNextPage ? organizations.length + 1 : organizations.length;
+    const loadMoreOrganizations = loading ? () => { } : loadMore;
+    const isLoaded = i => !hasNextPage || i < organizations.length;
 
     return (
-        <Paper style={{ width: '100%', height: 400 }}>
-            <section className="add-new">
-                <input type="text" placeholder="Organization Name" />
-                <button>
-                    Add New
-            </button>
-            </section>
-            <section>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Organization</th>
-                            <th>Active</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ?
-                            <tr>
-                                <td colSpan={2}>Loading...</td>
-                            </tr>
-                            : data.organizations.map(o =>
-                                <tr key={o.id}>
-                                    <td>{o.name}</td>
-                                    <td><input type="checkbox" defaultChecked={o.enabled} /></td>
-                                </tr>)}
-                    </tbody>
-                </table>
-            </section>
+        <Paper>
+            <AutoSizer>{({ height, width }) =>
+                <InfiniteLoader
+                    isItemLoaded={isLoaded}
+                    itemCount={count}
+                    loadMoreItems={loadMoreOrganizations}>
+                    {({ onItemsRendered, ref }) =>
+                        <List
+                            height={height}
+                            width={width}
+                            itemCount={count}
+                            itemSize={40}
+                            onItemsRendered={onItemsRendered}
+                            ref={ref}
+                        >
+                            {({ index, style }) => {
+                                let content;
+                                if (!isLoaded(index)) {
+                                    return <ListItem>
+                                        Loading...
+                                    </ListItem>
+                                }
+                                const { name, id } = organizations[index];
+                                content = name;
+                                return <ListItem key={`${id}`}>
+                                    {name}
+                                </ListItem>
+                            }}
+                        </List>
+                    }
+                </InfiniteLoader>
+            }</AutoSizer>
         </Paper>
     )
 }
