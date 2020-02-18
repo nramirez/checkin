@@ -35,7 +35,7 @@ const useOrganizations = (): OrganizationsResult => {
     notifyOnNetworkStatusChange: true,
   });
 
-  if (loading && !data.organizations) return {
+  if (loading || !data.organizations) return {
     loading,
     organizations: []
   };
