@@ -9,7 +9,7 @@ const resolvers = {
     Query: {
         organizations: (query, { cursor, first }) => {
             faker.seed(123)
-            const organizations = range(10, () => ({
+            const organizations = range(first, () => ({
                 id: random.uuid(),
                 name: `${name.firstName()} ${name.lastName()}`,
                 enabled: false

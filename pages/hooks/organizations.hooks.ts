@@ -68,7 +68,7 @@ const useOrganizations = (): OrganizationsResult => {
     organizations: data.organizations.edges.map(({ node }) => node),
     hasNextPage: data.organizations.pageInfo.hasNextPage,
     loading,
-    loadMore,
+    loadMore
   }
 }
 

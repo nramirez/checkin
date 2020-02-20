@@ -2,20 +2,16 @@ import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel
 import useOrganizations from '../hooks/organizations.hooks';
 
 import React, { useState, useRef, useEffect } from 'react';
-import MaterialTable, { Column, QueryResult } from 'material-table';
+import MaterialTable from 'material-table';
 
-interface Row {
-    name: string;
-    enabled: boolean;
-    id: string;
-}
+// get this from the table
+const count = 5;
 
 export const Organizations = (): JSX.Element => {
     const { organizations, loading, loadMore, hasNextPage } = useOrganizations();
-    const count = hasNextPage ? organizations.length + 1 : organizations.length;
-    const isLoaded = i => !hasNextPage || i < organizations.length;
+    const totalCount = () => hasNextPage ? organizations.length + 1 : organizations.length;
 
-    const [reload, setReload] = useState(false);
+    const [state, setState] = useState(false);
     const tableRef = useRef({
         onQueryUpdate: () => {
 
@@ -23,74 +19,74 @@ export const Organizations = (): JSX.Element => {
     });
 
     useEffect(() => {
-        if (reload || organizations) {
+        console.log('useEffect called')
+        if (state || organizations) {
             tableRef.current.onQueryUpdate();
         }
-    }, [reload, organizations]);
-
+    }, [state, organizations]);
     const loader = query =>
         new Promise<Organization>((resolve, reject) => {
-            if (query.loadMore) {
-                query.loadMore().finally(() => {
-                    // why?
-                    delete query.loadMore;
-                    setReload(true);
-                })
+            const needLoadMore = query.pageSize * (query.page + 1) < organizations.length;
+            if (needLoadMore && !loading && loadMore) {
+                loadMore().finally(() => {
+                    setState(true);
+                });
             }
 
             resolve({
                 data: organizations,
-                page: count / 20,
-                totalCount: count + 1
+                page: query.page,
+                totalCount: totalCount()
             } as any);
         });
 
     return (
-        <MaterialTable
-            title="Organizations"
-            columns={[
-                { title: 'Id', field: 'id' },
-                { title: 'Name', field: 'name' },
-                { title: 'Enabled', field: 'enabled', type: 'boolean' }
-            ]}
-            data={(query) => loader(query) as any}
-            editable={{
-                onRowAdd: newData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            // setState(prevState => {
-                            //     const data = [...prevState.data];
-                            //     data.push(newData);
-                            //     return { ...prevState, data };
-                            // });
-                        }, 600);
-                    }),
-                onRowUpdate: (newData, oldData) =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            // if (oldData) {
-                            //     setState(prevState => {
-                            //         const data = [...prevState.data];
-                            //         data[data.indexOf(oldData)] = newData;
-                            //         return { ...prevState, data };
-                            //     });
-                            // }
-                        }, 600);
-                    }),
-                onRowDelete: oldData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            // setState(prevState => {
-                            //     const data = [...prevState.data];
-                            //     data.splice(data.indexOf(oldData), 1);
-                            //     return { ...prevState, data };
-                            // });
-                        }, 600);
-                    }),
-            }}
-        />
+        <Paper>
+            <MaterialTable
+                title="Organizations"
+                columns={[
+                    { title: 'Name', field: 'name' },
+                    { title: 'Enabled', field: 'enabled', type: 'boolean' }
+                ]}
+                data={(query) => loader(query) as any}
+                editable={{
+                    onRowAdd: newData =>
+                        new Promise(resolve => {
+                            setTimeout(() => {
+                                resolve();
+                                // setState(prevState => {
+                                //     const data = [...prevState.data];
+                                //     data.push(newData);
+                                //     return { ...prevState, data };
+                                // });
+                            }, 600);
+                        }),
+                    onRowUpdate: (newData, oldData) =>
+                        new Promise(resolve => {
+                            setTimeout(() => {
+                                resolve();
+                                // if (oldData) {
+                                //     setState(prevState => {
+                                //         const data = [...prevState.data];
+                                //         data[data.indexOf(oldData)] = newData;
+                                //         return { ...prevState, data };
+                                //     });
+                                // }
+                            }, 600);
+                        }),
+                    onRowDelete: oldData =>
+                        new Promise(resolve => {
+                            setTimeout(() => {
+                                resolve();
+                                // setState(prevState => {
+                                //     const data = [...prevState.data];
+                                //     data.splice(data.indexOf(oldData), 1);
+                                //     return { ...prevState, data };
+                                // });
+                            }, 600);
+                        }),
+                }}
+            />
+        </Paper>
     );
 }
