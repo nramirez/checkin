@@ -8,10 +8,15 @@ import MaterialTable from 'material-table';
 const count = 5;
 
 export const Organizations = (): JSX.Element => {
-    const { organizations, loading, loadMore, hasNextPage } = useOrganizations();
+    console.log('reseting');
+    const onCompleted = data => {
+        console.log('on completed', data)
+        tableRef.current.onQueryUpdate();
+    };
+    const { organizations, loading, loadMore, hasNextPage } = useOrganizations(onCompleted);
     const totalCount = () => hasNextPage ? organizations.length + 1 : organizations.length;
 
-    const [state, setState] = useState(false);
+    const [state, setState] = useState(loading);
     const tableRef = useRef({
         onQueryUpdate: () => {
 
@@ -19,17 +24,19 @@ export const Organizations = (): JSX.Element => {
     });
 
     useEffect(() => {
-        console.log('useEffect called')
-        if (state || organizations) {
-            tableRef.current.onQueryUpdate();
-        }
-    }, [state, organizations]);
+        console.log('useEffect called ', state)
+        // if (!loading) {
+        //     tableRef.current.onQueryUpdate();
+        //     setState(false);
+        // }
+    }, []);
+
     const loader = query =>
         new Promise<Organization>((resolve, reject) => {
             const needLoadMore = query.pageSize * (query.page + 1) < organizations.length;
             if (needLoadMore && !loading && loadMore) {
                 loadMore().finally(() => {
-                    setState(true);
+                    //setState(true);
                 });
             }
 

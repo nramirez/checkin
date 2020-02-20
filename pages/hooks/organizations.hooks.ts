@@ -4,7 +4,7 @@ import { ApolloQueryResult } from 'apollo-client/core/types';
 
 const GET_ORGANIZATIONS = gql`
 query getOrganizations($cursor: ID) {
-  organizations(first: 20, cursor: $cursor) {
+  organizations(first: 100, cursor: $cursor) {
     edges {
       node {
         name
@@ -26,13 +26,14 @@ export interface OrganizationsResult {
   loadMore?: () => Promise<ApolloQueryResult<any>>
 }
 
-const useOrganizations = (): OrganizationsResult => {
+const useOrganizations = (onCompleted): OrganizationsResult => {
   const {
     data,
     loading,
     fetchMore,
   } = useQuery(GET_ORGANIZATIONS, {
     notifyOnNetworkStatusChange: true,
+    onCompleted
   });
 
   if (loading || !data.organizations) return {
@@ -43,7 +44,6 @@ const useOrganizations = (): OrganizationsResult => {
   const loadMore = () => {
     return fetchMore({
       query: GET_ORGANIZATIONS,
-      //notifyOnNetworkStatusChange: true,
       variables: {
         cursor: data.organizations.pageInfo.endCursor,
       },
