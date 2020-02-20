@@ -1,105 +1,96 @@
 import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel, Checkbox, List, ListItem, Theme, createStyles } from '@material-ui/core';
 import useOrganizations from '../hooks/organizations.hooks';
 
-import React from 'react';
-import MaterialTable, { Column } from 'material-table';
-import { resolve } from 'dns';
+import React, { useState, useRef, useEffect } from 'react';
+import MaterialTable, { Column, QueryResult } from 'material-table';
 
 interface Row {
     name: string;
-    surname: string;
-    birthYear: number;
-    birthCity: number;
+    enabled: boolean;
+    id: string;
 }
 
-interface TableState {
-    columns: Array<Column<Row>>;
-}
-
-export default function MaterialTableDemo() {
-    const [state, setState] = React.useState<TableState>({
-        columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Enabled', field: 'enabled', type: 'boolean' }
-        ]
-    });
-
+export const Organizations = (): JSX.Element => {
     const { organizations, loading, loadMore, hasNextPage } = useOrganizations();
     const count = hasNextPage ? organizations.length + 1 : organizations.length;
     const isLoaded = i => !hasNextPage || i < organizations.length;
 
-    const dataLoader = query => new Promise((resolve, reject) => {
-        if (loading || !isLoaded) {
-            console.log('calling while loading or loaded...');
-            resolve();
+    const [reload, setReload] = useState(false);
+    const tableRef = useRef({
+        onQueryUpdate: () => {
+
         }
-        loadMore().then(response => {
+    });
+
+    useEffect(() => {
+        if (reload || organizations) {
+            tableRef.current.onQueryUpdate();
+        }
+    }, [reload, organizations]);
+
+    const loader = query =>
+        new Promise<Organization>((resolve, reject) => {
+            if (query.loadMore) {
+                query.loadMore().finally(() => {
+                    // why?
+                    delete query.loadMore;
+                    setReload(true);
+                })
+            }
+
             resolve({
-                data: response.data,
-                page: response.pageInfo.hasNextPage ? 
-            })
-
-
-        }).catch(err => {
-            console.log('handle err', err);
-        }
-    })
-
+                data: organizations,
+                page: count / 20,
+                totalCount: count + 1
+            } as any);
+        });
 
     return (
         <MaterialTable
             title="Organizations"
-            columns={state.columns}
-            data={dataLoader}
+            columns={[
+                { title: 'Id', field: 'id' },
+                { title: 'Name', field: 'name' },
+                { title: 'Enabled', field: 'enabled', type: 'boolean' }
+            ]}
+            data={(query) => loader(query) as any}
             editable={{
                 onRowAdd: newData =>
                     new Promise(resolve => {
                         setTimeout(() => {
                             resolve();
-                            setState(prevState => {
-                                const data = [...prevState.data];
-                                data.push(newData);
-                                return { ...prevState, data };
-                            });
+                            // setState(prevState => {
+                            //     const data = [...prevState.data];
+                            //     data.push(newData);
+                            //     return { ...prevState, data };
+                            // });
                         }, 600);
                     }),
                 onRowUpdate: (newData, oldData) =>
                     new Promise(resolve => {
                         setTimeout(() => {
                             resolve();
-                            if (oldData) {
-                                setState(prevState => {
-                                    const data = [...prevState.data];
-                                    data[data.indexOf(oldData)] = newData;
-                                    return { ...prevState, data };
-                                });
-                            }
+                            // if (oldData) {
+                            //     setState(prevState => {
+                            //         const data = [...prevState.data];
+                            //         data[data.indexOf(oldData)] = newData;
+                            //         return { ...prevState, data };
+                            //     });
+                            // }
                         }, 600);
                     }),
                 onRowDelete: oldData =>
                     new Promise(resolve => {
                         setTimeout(() => {
                             resolve();
-                            setState(prevState => {
-                                const data = [...prevState.data];
-                                data.splice(data.indexOf(oldData), 1);
-                                return { ...prevState, data };
-                            });
+                            // setState(prevState => {
+                            //     const data = [...prevState.data];
+                            //     data.splice(data.indexOf(oldData), 1);
+                            //     return { ...prevState, data };
+                            // });
                         }, 600);
                     }),
             }}
         />
     );
-}
-
-
-export const Organizations = (): JSX.Element => {
-    const { organizations, loading, loadMore, hasNextPage } = useOrganizations();
-    const count = hasNextPage ? organizations.length + 1 : organizations.length;
-    const loadMoreOrganizations = loading ? () => { } : loadMore;
-    const isLoaded = i => !hasNextPage || i < organizations.length;
-    console.log(organizations, loading);
-
-    return <Paper style={{ height: 400, width: '100%' }}>
-    </Paper>
 }
