@@ -1,12 +1,13 @@
 
 import { NextPage } from 'next';
 import { Navbar, Page } from './components/navbar';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, Suspense } from 'react';
 import { TabPanel } from './components/TabPanel';
 import withApollo from '../lib/withAppollo';
 import { Organizations } from './components/organizations';
 import { Members } from './components/members';
 import { Events } from './components/events';
+import { CircularProgress } from '@material-ui/core';
 
 const AdminPage: NextPage<{}> = () => {
     const [value, setValue] = useState(0);

@@ -26,12 +26,14 @@ export interface OrganizationsResult {
   fetchMore?: () => Promise<ApolloQueryResult<any>>
 }
 
-const useOrganizations = (): OrganizationsResult => {
+const useOrganizations = (onCompleted): OrganizationsResult => {
   const {
     data,
     loading,
     fetchMore,
-  } = useQuery(GET_ORGANIZATIONS);
+  } = useQuery(GET_ORGANIZATIONS, {
+    onCompleted
+  });
 
   if (loading || !data.organizations) return {
     loading,
