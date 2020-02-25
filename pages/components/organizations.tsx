@@ -2,50 +2,33 @@ import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel
 import useOrganizations from '../hooks/organizations.hooks';
 
 import React, { useState, useRef, useEffect } from 'react';
-import MaterialTable from 'material-table';
-
-// get this from the table
-const count = 5;
+import MaterialTable, { Query, QueryResult } from 'material-table';
 
 export const Organizations = (): JSX.Element => {
-    console.log('reseting');
-    const onCompleted = data => {
-        console.log('on completed', data)
-        tableRef.current.onQueryUpdate();
-    };
-    const { organizations, loading, loadMore, hasNextPage } = useOrganizations(onCompleted);
-    const totalCount = () => hasNextPage ? organizations.length + 1 : organizations.length;
+    const { loading, data, fetchMore, hasNextPage } = useOrganizations();
+    const shouldLoadMore = (
+        page: number,
+        pageSize: number
+    ) => hasNextPage && page > Math.floor(data.length / pageSize);
+    const totalCount = () => hasNextPage ? data.length + 1 : data.length;
 
-    const [state, setState] = useState(loading);
-    const tableRef = useRef({
-        onQueryUpdate: () => {
-
-        }
-    });
-
-    useEffect(() => {
-        console.log('useEffect called ', state)
-        // if (!loading) {
-        //     tableRef.current.onQueryUpdate();
-        //     setState(false);
-        // }
-    }, []);
-
-    const loader = query =>
-        new Promise<Organization>((resolve, reject) => {
-            const needLoadMore = query.pageSize * (query.page + 1) < organizations.length;
-            if (needLoadMore && !loading && loadMore) {
-                loadMore().finally(() => {
-                    //setState(true);
-                });
+    const loadData = (query) : Promise<QueryResult<Organization> {
+        return new Promise((resolve, reject) => {
+            if (loading) {
+                console.log('loading ');
+            } else if (shouldLoadMore(query.page, query.pageSize)) {
+                fetchMore().then(response => {
+                    resolve({
+                        data: data,
+                        page: query.page + 1,
+                        totalCount: totalCount()
+                    })
+                }).catch(reject);
             }
+            console.log('loaded')
+        })
+    };
 
-            resolve({
-                data: organizations,
-                page: query.page,
-                totalCount: totalCount()
-            } as any);
-        });
 
     return (
         <Paper>
@@ -55,7 +38,7 @@ export const Organizations = (): JSX.Element => {
                     { title: 'Name', field: 'name' },
                     { title: 'Enabled', field: 'enabled', type: 'boolean' }
                 ]}
-                data={(query) => loader(query) as any}
+                data={loadData}
                 editable={{
                     onRowAdd: newData =>
                         new Promise(resolve => {

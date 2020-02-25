@@ -20,25 +20,22 @@ query getOrganizations($cursor: ID) {
 `;
 
 export interface OrganizationsResult {
-  organizations: Organization[];
+  data: Organization[];
   hasNextPage?: boolean;
   loading: boolean;
-  loadMore?: () => Promise<ApolloQueryResult<any>>
+  fetchMore?: () => Promise<ApolloQueryResult<any>>
 }
 
-const useOrganizations = (onCompleted): OrganizationsResult => {
+const useOrganizations = (): OrganizationsResult => {
   const {
     data,
     loading,
     fetchMore,
-  } = useQuery(GET_ORGANIZATIONS, {
-    notifyOnNetworkStatusChange: true,
-    onCompleted
-  });
+  } = useQuery(GET_ORGANIZATIONS);
 
   if (loading || !data.organizations) return {
     loading,
-    organizations: []
+    data: []
   };
 
   const loadMore = () => {
@@ -65,10 +62,10 @@ const useOrganizations = (onCompleted): OrganizationsResult => {
   }
 
   return {
-    organizations: data.organizations.edges.map(({ node }) => node),
+    data: data.organizations.edges.map(({ node }) => node),
     hasNextPage: data.organizations.pageInfo.hasNextPage,
     loading,
-    loadMore
+    fetchMore: loadMore
   }
 }
 
