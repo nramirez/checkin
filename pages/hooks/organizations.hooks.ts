@@ -33,10 +33,9 @@ const useOrganizations = (): OrganizationsResult => {
     fetchMore,
   } = useQuery(GET_ORGANIZATIONS);
 
-  if (loading || !data.organizations) return {
+  if (loading || !data || !data.organizations) return {
     loading,
-    data: [],
-    hasNextPage: true
+    data: []
   };
 
   const loadMore = () => {
