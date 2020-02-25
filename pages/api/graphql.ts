@@ -4,6 +4,7 @@ var faker = require('faker');
 const { random, name } = faker;
 
 const range = (size, callback) => Array.from({ length: size }, callback);
+const Max_Organizations = 200;
 
 const resolvers = {
     Query: {
@@ -27,7 +28,7 @@ const resolvers = {
                 })),
                 pageInfo: {
                     endCursor: sliceOfOrganizations[sliceOfOrganizations.length - 1].id,
-                    hasNextPage: cursorIndex + first < organizations.length,
+                    hasNextPage: cursorIndex + first < Max_Organizations,
                 },
             }
         },

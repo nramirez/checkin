@@ -1,52 +1,54 @@
-import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel, Checkbox, List, ListItem, Theme, createStyles } from '@material-ui/core';
+import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel, Checkbox, List, ListItem, Theme, createStyles, CircularProgress } from '@material-ui/core';
 import useOrganizations from '../hooks/organizations.hooks';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable, { Query, QueryResult } from 'material-table';
 
 export const Organizations = (): JSX.Element => {
-    const { loading, data, fetchMore, hasNextPage } = useOrganizations(() => {
-        // workaround to handle loading the initial data to MaterialTable
-        // looking forward to replacing it with suspense
-        if (initialLoadResponse) {
-            initialLoadResponse({
-                data: data,
-                page: 0,
-                totalCount: data.length + 1
-            });
-        }
-    });
-    const [initialLoadResponse, setInitialLoadResponse] = useState(null);
+    const { loading, data, fetchMore, hasNextPage } = useOrganizations();
+    const [initialLoad, setInitialLoad] = useState(true);
 
     const shouldLoadMore = (
         page: number,
         pageSize: number
-    ) => hasNextPage && page > Math.floor(data.length / pageSize);
+    ) => hasNextPage && page > Math.floor(data.length / pageSize) - 2;
     const totalCount = () => hasNextPage ? data.length + 1 : data.length;
 
+    useEffect(() => {
+        if (initialLoad && !loading) {
+            setInitialLoad(false);
+        }
+    }, [loading]);
+
+    if (initialLoad) {
+        return <CircularProgress />;
+    }
+
     const loadData = query => new Promise<QueryResult<Organization>>((resolve, reject) => {
-        console.log('load more')
-        if (!initialLoadResponse) {
-            if (!loading) {
-                setInitialLoadResponse(() => { });
+        console.log(query)
+        console.log(data);
+        console.log(hasNextPage)
+        if (query.page === 0 && query.totalCount === 0) {
+            resolve({
+                data: data,
+                page: 0,
+                totalCount: totalCount()
+            });
+        } else if (shouldLoadMore(query.page, query.pageSize)) {
+            fetchMore().then(response => {
+                console.log('fetched more', response)
                 resolve({
                     data: data,
                     page: query.page + 1,
                     totalCount: totalCount()
                 });
-            } else {
-                setInitialLoadResponse(resolve);
-            }
-        } else if (!loading && shouldLoadMore(query.page, query.pageSize)) {
-            fetchMore().then(response => {
-                
-            console.log('fetched more', response)
-                resolve({
-                    data: data,
-                    page: query.page + 1,
-                    totalCount: totalCount()
-                })
             }).catch(reject);
+        } else {
+            resolve({
+                data: data,
+                page: query.page + 1,
+                totalCount: totalCount()
+            });
         }
     });
 
