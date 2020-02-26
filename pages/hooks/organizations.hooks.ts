@@ -7,6 +7,7 @@ query getOrganizations($cursor: ID) {
   organizations(first: 10, cursor: $cursor) {
     edges {
       node {
+        id
         name
         enabled
       }
@@ -47,6 +48,7 @@ const useOrganizations = (): OrganizationsResult => {
       updateQuery: (previousResult, { fetchMoreResult }) => {
         const newEdges = fetchMoreResult.organizations.edges
         const pageInfo = fetchMoreResult.organizations.pageInfo
+        console.log(previousResult)
 
         return newEdges.length
           ? {

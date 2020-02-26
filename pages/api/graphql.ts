@@ -9,19 +9,17 @@ const Max_Organizations = 200;
 const resolvers = {
     Query: {
         organizations: (query, { cursor, first }) => {
-            faker.seed(Date.now)
-            const organizations = range(first, () => ({
-                id: random.uuid(),
+            faker.seed(1000);
+            let id = 0;
+            const organizations = range(Max_Organizations, () => ({
+                id: id++,
                 name: `${name.firstName()} ${name.lastName()}`,
                 enabled: false
             })) as Organization[];
 
-            console.log(organizations)
-
-            const cursorIndex = !cursor ? 0 : cursor + 1
+            const cursorIndex = !cursor ? 0 : Number(cursor) + 1
             const sliceOfOrganizations = organizations.slice(cursorIndex, cursorIndex + first)
 
-            console.log(sliceOfOrganizations)
             return {
                 edges: sliceOfOrganizations.map(o => ({
                     cursor: o.id,

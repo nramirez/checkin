@@ -2,52 +2,47 @@ import { Paper, TableContainer, TableHead, TableBody, TableRow, FormControlLabel
 import useOrganizations from '../hooks/organizations.hooks';
 
 import React, { useState, useEffect } from 'react';
-import MaterialTable, { Query, QueryResult } from 'material-table';
+import MaterialTable, { QueryResult } from 'material-table';
 
 export const Organizations = (): JSX.Element => {
     const { loading, data, fetchMore, hasNextPage } = useOrganizations();
     const [initialLoad, setInitialLoad] = useState(true);
+    const [orgs, setOrgs] = useState(data);
 
     const shouldLoadMore = (
         page: number,
         pageSize: number
-    ) => hasNextPage && page > Math.floor(data.length / pageSize) - 2;
-    const totalCount = () => hasNextPage ? data.length + 1 : data.length;
+    ) => hasNextPage && page > Math.floor(orgs.length / pageSize) - 2;
 
-    useEffect(() => {
-        if (initialLoad && !loading) {
-            setInitialLoad(false);
-        }
-    }, [loading]);
+    // useEffect(() => {
+    //     if (initialLoad && !loading) {
+    //         setInitialLoad(false);
+    //     }
+    // }, [loading]);
 
-    if (initialLoad) {
+    if (orgs.length < 0) {
         return <CircularProgress />;
     }
 
     const loadData = query => new Promise<QueryResult<Organization>>((resolve, reject) => {
-        console.log(query)
-        console.log(data);
-        console.log(hasNextPage)
-        if (query.page === 0 && query.totalCount === 0) {
-            resolve({
-                data: data,
-                page: 0,
-                totalCount: totalCount()
-            });
-        } else if (shouldLoadMore(query.page, query.pageSize)) {
-            fetchMore().then(response => {
-                console.log('fetched more', response)
+        if (shouldLoadMore(query.page, query.pageSize)) {
+            console.log('fetching more')
+            fetchMore().then((res: any) => {
+                console.log(res);
+                let { edges, pageInfo } = res.data.organizations;
+                let newOrgs = edges.map(({ node }) => node);
+                setOrgs(newOrgs);
                 resolve({
-                    data: data,
+                    data: orgs,
                     page: query.page + 1,
-                    totalCount: totalCount()
+                    totalCount: orgs.length
                 });
             }).catch(reject);
         } else {
             resolve({
-                data: data,
+                data: orgs,
                 page: query.page + 1,
-                totalCount: totalCount()
+                totalCount: orgs.length
             });
         }
     });
