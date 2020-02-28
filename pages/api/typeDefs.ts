@@ -36,6 +36,6 @@ export default gql`
     }
 
     type Query {
-        Orgs(first: Int!, cursor: ID): OrgConnection
+        getOrgs(first: Int!, cursor: ID): OrgConnection
     }
 `;

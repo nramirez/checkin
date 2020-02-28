@@ -7,31 +7,31 @@ const range = (size, callback) => Array.from({ length: size }, callback);
 const Max_Organizations = 200;
 
 const resolvers = {
-    Query: {
-        organizations: (query, { cursor, first }) => {
-            faker.seed(1000);
-            let id = 0;
-            const organizations = range(Max_Organizations, () => ({
-                id: id++,
-                name: `${name.firstName()} ${name.lastName()}`,
-                enabled: false
-            })) as Organization[];
+    // Query: {
+    //     orgs: (query, { cursor, first }) => {
+    //         faker.seed(1000);
+    //         let id = 0;
+    //         const orgs = range(Max_Organizations, () => ({
+    //             id: id++,
+    //             name: `${name.firstName()} ${name.lastName()}`,
+    //             enabled: false
+    //         })) as Organization[];
 
-            const cursorIndex = !cursor ? 0 : Number(cursor) + 1
-            const sliceOfOrganizations = organizations.slice(cursorIndex, cursorIndex + first)
+    //         const cursorIndex = !cursor ? 0 : Number(cursor) + 1
+    //         const sliceOfOrganizations = orgs.slice(cursorIndex, cursorIndex + first)
 
-            return {
-                edges: sliceOfOrganizations.map(o => ({
-                    cursor: o.id,
-                    node: { ...o }
-                })),
-                pageInfo: {
-                    endCursor: sliceOfOrganizations[sliceOfOrganizations.length - 1].id,
-                    hasNextPage: cursorIndex + first < Max_Organizations,
-                },
-            }
-        },
-    },
+    //         return {
+    //             edges: sliceOfOrganizations.map(o => ({
+    //                 cursor: o.id,
+    //                 node: { ...o }
+    //             })),
+    //             pageInfo: {
+    //                 endCursor: sliceOfOrganizations[sliceOfOrganizations.length - 1].id,
+    //                 hasNextPage: cursorIndex + first < Max_Organizations,
+    //             },
+    //         }
+    //     },
+    // },
 }
 
 const apolloServer = new ApolloServer({

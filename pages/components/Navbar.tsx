@@ -5,7 +5,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 import EventIcon from '@material-ui/icons/Event';
 
 export enum Page {
-    Organizations,
+    Orgs,
     Members,
     Events
 }
@@ -35,7 +35,7 @@ export const Navbar = ({ value, handleTabChange }: NavbarProps): JSX.Element => 
                 textColor="secondary"
                 aria-label="top navbar actions" >
 
-                <Tab icon={<BusinessIcon />} label="Organizations" />
+                <Tab icon={<BusinessIcon />} label="Orgs" />
                 <Tab icon={<PersonPinIcon />} label="Members" />
                 <Tab icon={<EventIcon />} label="Events" />
             </Tabs>

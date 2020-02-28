@@ -4,7 +4,7 @@ import { Navbar, Page } from './components/navbar';
 import { Fragment, useState, Suspense } from 'react';
 import { TabPanel } from './components/TabPanel';
 import withApollo from '../lib/withAppollo';
-import { Organizations } from './components/organizations';
+import { Orgs } from './components/orgs';
 import { Members } from './components/members';
 import { Events } from './components/events';
 import { CircularProgress } from '@material-ui/core';
@@ -18,8 +18,8 @@ const AdminPage: NextPage<{}> = () => {
 
     return <Fragment>
         <Navbar value={value} handleTabChange={handleTabChange} />
-        <TabPanel value={value} index={Page.Organizations}>
-            <Organizations />
+        <TabPanel value={value} index={Page.Orgs}>
+            <Orgs />
         </TabPanel>
         <TabPanel value={value} index={Page.Members}>
             <Members />

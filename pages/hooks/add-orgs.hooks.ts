@@ -14,13 +14,13 @@ export interface OrgInput {
     name: string;
     enabled: boolean;
 }
+
 export interface OrgPayload {
-    org: Organization;
+    org: Org;
 }
 
 const useAddOrg = () => {
     const [addOrg] = useMutation<OrgInput>(ADD_ORG);
-
     return [addOrg];
 }
 

@@ -50,7 +50,7 @@
       "opacity": 100,
       "seed": 1417356107,
       "points": [],
-      "text": "Organizations",
+      "text": "Orgs",
       "font": "20px Virgil",
       "baseline": 22
     },
@@ -311,7 +311,7 @@
       "opacity": 100,
       "seed": 1246306195,
       "points": [],
-      "text": "Simple Table to Manage Users/Organizations/events",
+      "text": "Simple Table to Manage Users/Orgs/events",
       "font": "20px Virgil",
       "baseline": 22
     },

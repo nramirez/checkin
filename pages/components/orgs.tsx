@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
 import { useAddOrg, OrgInput } from '../hooks/add-orgs.hooks';
 
-export const Organizations = (): JSX.Element => {
+export const Orgs = (): JSX.Element => {
     const { loading, data, fetchMore, hasNextPage } = useOrgs();
     const [addOrg] = useAddOrg();
     const ref = useRef();

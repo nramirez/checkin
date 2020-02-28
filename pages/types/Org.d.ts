@@ -1,4 +1,4 @@
-interface Organization {
+interface Org {
     id: number;
     name: string;
     enabled: boolean;
