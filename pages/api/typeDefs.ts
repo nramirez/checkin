@@ -1,23 +1,23 @@
 import gql from 'graphql-tag';
 
 export default gql`
-    type Organization {
+    type Org {
         id: ID!
         name: String
         enabled: Boolean
     }
 
-    input OrganizationInput {
+    input OrgInput {
         name: String!
         enabled: Boolean
     }
 
-    type OrganizationPayload {
-        organization: Organization
+    type OrgPayload {
+        org: Org
     }
 
-    type OrganizationConnection {
-        edges: [OrganizationEdge]
+    type OrgConnection {
+        edges: [OrgEdge]
         pageInfo: PageInfo
     }
 
@@ -26,16 +26,16 @@ export default gql`
         hasNextPage: Boolean!
     }
 
-    type OrganizationEdge {
+    type OrgEdge {
         cursor: ID!
-        node: Organization!
+        node: Org!
     }
 
     type Mutation {
-        addOrganization(input: OrganizationInput!): OrganizationPayload!
+        addOrg(org: OrgInput!): OrgPayload!
     }
 
     type Query {
-        organizations(first: Int!, cursor: ID): OrganizationConnection
+        Orgs(first: Int!, cursor: ID): OrgConnection
     }
 `;

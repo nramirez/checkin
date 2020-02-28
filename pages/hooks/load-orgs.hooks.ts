@@ -27,7 +27,7 @@ export interface OrganizationsResult {
   fetchMore?: () => Promise<ApolloQueryResult<any>>
 }
 
-const useOrganizations = (): OrganizationsResult => {
+const useLoadOrgs = (): OrganizationsResult => {
   const {
     data,
     loading,
@@ -71,4 +71,6 @@ const useOrganizations = (): OrganizationsResult => {
   }
 }
 
-export default useOrganizations;
+export { 
+  useLoadOrgs as useOrgs 
+} ;

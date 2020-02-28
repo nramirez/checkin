@@ -1,11 +1,13 @@
 import { Paper } from '@material-ui/core';
-import useOrganizations from '../hooks/organizations.hooks';
+import { useOrgs } from '../hooks/load-orgs.hooks';
 
 import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
+import { useAddOrg, OrgInput } from '../hooks/add-orgs.hooks';
 
 export const Organizations = (): JSX.Element => {
-    const { loading, data, fetchMore, hasNextPage } = useOrganizations();
+    const { loading, data, fetchMore, hasNextPage } = useOrgs();
+    const [addOrg] = useAddOrg();
     const ref = useRef();
 
     const handleOnPageChange = () => {
@@ -25,21 +27,27 @@ export const Organizations = (): JSX.Element => {
                     { title: 'Name', field: 'name' },
                     { title: 'Enabled', field: 'enabled', type: 'boolean' }
                 ]}
+                options={
+                    {
+                        addRowPosition: 'first'
+                    }
+                }
                 isLoading={loading}
                 data={data}
                 onChangePage={handleOnPageChange}
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
-                    onRowAdd: newData =>
+                    onRowAdd: (newData: OrgInput) =>
                         new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve();
-                                // setState(prevState => {
-                                //     const data = [...prevState.data];
-                                //     data.push(newData);
-                                //     return { ...prevState, data };
-                                // });
-                            }, 600);
+                            addOrg({
+                                variables: {
+                                    org: {
+                                        ...newData
+                                    }
+                                }
+                            })
+                                .then(resolve)
+                                .catch(console.error);
                         }),
                     onRowUpdate: (newData, oldData) =>
                         new Promise(resolve => {
