@@ -50,14 +50,7 @@ export const Members = (): JSX.Element => {
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
                     onRowAdd: (newMemberInput: MemberInput) => insertMember(newMemberInput),
-                    onRowUpdate: (newData: Member, oldData: Member) =>
-                        new Promise((resolve, reject) => {
-                            updateMember(newData.id, newData)
-                                .then((response) => {
-                                    console.log(response);
-                                    resolve(response)
-                                }).catch(reject);
-                        })
+                    onRowUpdate: (newData: Member) => updateMember(newData.id, newData)
                 }}
             />
         </Paper>
