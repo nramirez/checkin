@@ -6,7 +6,7 @@ export interface Member {
     phone?: string;
 }
 
-export interface UserInput {
+export interface MemberInput {
     email?: string;
     lastName: string;
     name: string;

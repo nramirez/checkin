@@ -71,8 +71,6 @@ const useMembers = (initialInfo: PageInfo): UserResult => {
     })
   }
 
-  console.log('nodes', data.Members_aggregate.nodes);
-
   return {
     data: data.Members_aggregate.nodes.map(node => node),
     count: data.Members_aggregate.aggregate.count,

@@ -3,15 +3,15 @@ import { useMembers } from '../hooks/load-members.hooks';
 
 import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
-import { useInsertUser } from '../hooks/insert-members.hooks';
-import { UserInput } from '../hooks/types';
+import { useInsertMember } from '../hooks/insert-members.hooks';
+import { MemberInput, Member } from '../hooks/types';
 
 export const Members = (): JSX.Element => {
     const { loading, data, fetchMore, count } = useMembers({
         limit: 100,
         offset: 0
     });
-    const [insertUser] = useInsertUser();
+    const [insertMember] = useInsertMember();
     const ref = useRef();
 
     const handleOnPageChange = () => {
@@ -33,8 +33,9 @@ export const Members = (): JSX.Element => {
                 title="Members"
                 columns={[
                     { title: 'Email', field: 'email' },
-                    { title: 'name', field: 'name' },
-                    { title: 'phone', field: 'phone' },
+                    { title: 'Name', field: 'name' },
+                    { title: 'Last Name', field: 'lastName' },
+                    { title: 'Phone', field: 'phone' },
                 ]}
                 options={
                     {
@@ -46,11 +47,14 @@ export const Members = (): JSX.Element => {
                 onChangePage={handleOnPageChange}
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
-                    onRowAdd: (newUser: UserInput) =>
-                        new Promise(resolve => {
-                            insertUser(newUser)
-                                .then(resolve)
-                                .catch(console.error);
+                    onRowAdd: (newMemberInput: MemberInput) =>
+                        new Promise((resolve, reject) => {
+                            insertMember(newMemberInput)
+                                .then((response) => {
+                                    console.log(response);
+                                    resolve(response)
+                                })
+                                .catch(reject);
                         }),
                     onRowUpdate: (newData, oldData) =>
                         new Promise(resolve => {

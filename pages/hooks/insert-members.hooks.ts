@@ -1,13 +1,12 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { Member, UserInput } from './types';
+import { MemberInput } from './types';
 
-const INSERT_USER = gql`
+const INSERT_MEMBERS = gql`
 mutation InsertUser(
-  $objects: [Members_insert_input!]!,
-  $on_conflict: Members_on_conflict
+  $objects: [Members_insert_input!]!
 ) {
-  insert_Members(objects: $objects, on_conflict: $on_conflict) {
+  insert_Members(objects: $objects) {
     returning {
       id
       email
@@ -19,19 +18,18 @@ mutation InsertUser(
 }
 `;
 
-export interface InsertUserPayload {
-  org: Member;
+const useInsertMember = () => {
+  const [insertMembers] = useMutation(INSERT_MEMBERS);
+  const insertMember = (memberInput: MemberInput) => new Promise(
+    (resolve, reject) => {
+      insertMembers({
+        variables: {
+          objects: [memberInput]
+        }
+      }).then(({ data }) => resolve(data.insert_Members.returning[0]))
+        .catch(reject);
+    });
+  return [insertMember];
 }
 
-const useInsertUser = () => {
-  const [insertMembers] = useMutation(INSERT_USER);
-  const insertUser = (memberInput: UserInput) =>
-    insertMembers({
-      variables: {
-        $objects: [memberInput]
-      }
-    })
-  return [insertUser];
-}
-
-export { useInsertUser };
+export { useInsertMember };
