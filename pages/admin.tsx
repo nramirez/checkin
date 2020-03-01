@@ -7,7 +7,6 @@ import withApollo from '../lib/withAppollo';
 import { Orgs } from './components/orgs';
 import { Members } from './components/members';
 import { Events } from './components/events';
-import { CircularProgress } from '@material-ui/core';
 
 const AdminPage: NextPage<{}> = () => {
     const [value, setValue] = useState(0);

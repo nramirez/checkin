@@ -1,12 +1,12 @@
 import { Paper } from '@material-ui/core';
-import { useOrgs } from '../hooks/load-orgs.hooks';
+import { useUsers } from '../hooks/load-users.hooks';
 
 import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
 import { useAddOrg, OrgInput } from '../hooks/add-orgs.hooks';
 
-export const Orgs = (): JSX.Element => {
-    const { loading, data, fetchMore, hasNextPage } = useOrgs();
+export const Users = (): JSX.Element => {
+    const { loading, data, fetchMore, hasNextPage } = useUsers();
     const [addOrg] = useAddOrg();
     const ref = useRef();
 

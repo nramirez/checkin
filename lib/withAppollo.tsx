@@ -17,7 +17,7 @@ const authLink = setContext((_, { headers }) => {
   }
 });
 
-const httpLink = createHttpLink({ uri: '/api/graphql' });
+const httpLink = createHttpLink({ uri: 'https://graphql-checkin.herokuapp.com/v1/graphql' });
 
 export default withApollo(
   ({ initialState }) => {
