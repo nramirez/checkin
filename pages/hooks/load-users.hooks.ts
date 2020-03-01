@@ -62,13 +62,14 @@ const useUsers = (initialInfo: PageInfo): UserResult => {
         ...info
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        const newEdges = fetchMoreResult.Users.edges
+        const newEdges = fetchMoreResult.Users.edges;
 
         return newEdges.length
           ? {
             Users: {
               __typename: previousResult.Users.__typename,
-              edges: [...previousResult.Users.edges, ...newEdges]
+              edges: [...previousResult.Users.edges, ...newEdges],
+              aggregate: fetchMoreResult.aggregate.count
             },
           }
           : previousResult
@@ -78,7 +79,7 @@ const useUsers = (initialInfo: PageInfo): UserResult => {
 
   return {
     data: data.Users.edges.map(({ node }) => node),
-    hasNextPage: data.Users.pageInfo.hasNextPage,
+    hasNextPage: data.Users.aggregate.count,
     loading,
     fetchMore: loadMore
   }

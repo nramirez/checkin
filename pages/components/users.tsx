@@ -6,7 +6,10 @@ import MaterialTable from 'material-table';
 import { useAddOrg, OrgInput } from '../hooks/add-orgs.hooks';
 
 export const Users = (): JSX.Element => {
-    const { loading, data, fetchMore, hasNextPage } = useUsers();
+    const { loading, data, fetchMore, hasNextPage } = useUsers({
+        limit: 5,
+        offset: 0
+    });
     const [addOrg] = useAddOrg();
     const ref = useRef();
 
@@ -14,7 +17,10 @@ export const Users = (): JSX.Element => {
         const { currentPage, pageSize } = (ref as any).current.state;
         const shouldFetch = hasNextPage && currentPage > Math.floor(data.length / pageSize) - 2;
         if (shouldFetch) {
-            fetchMore();
+            fetchMore({
+                limit: pageSize,
+                offset: currentPage
+            });
         }
     }
 

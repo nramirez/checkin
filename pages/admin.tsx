@@ -4,9 +4,8 @@ import { Navbar, Page } from './components/navbar';
 import { Fragment, useState, Suspense } from 'react';
 import { TabPanel } from './components/TabPanel';
 import withApollo from '../lib/withAppollo';
-import { Orgs } from './components/orgs';
-import { Members } from './components/members';
 import { Events } from './components/events';
+import { Users } from './components/users';
 
 const AdminPage: NextPage<{}> = () => {
     const [value, setValue] = useState(0);
@@ -17,11 +16,8 @@ const AdminPage: NextPage<{}> = () => {
 
     return <Fragment>
         <Navbar value={value} handleTabChange={handleTabChange} />
-        <TabPanel value={value} index={Page.Orgs}>
-            <Orgs />
-        </TabPanel>
         <TabPanel value={value} index={Page.Members}>
-            <Members />
+            <Users />
         </TabPanel>
         <TabPanel value={value} index={Page.Events}>
             <Events />
