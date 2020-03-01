@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { ApolloQueryResult } from 'apollo-client/core/types';
+import { Member } from './types';
 
-const LoadUsers = gql`
-query LoadUsers($limit: Int!, $offset: Int!) {
-  Users_aggregate(limit: $limit, offset: $offset) {
+const LoadMembers = gql`
+query LoadMembers($limit: Int!, $offset: Int!) {
+  Members_aggregate(limit: $limit, offset: $offset) {
     aggregate {
       count
     }
@@ -19,56 +20,49 @@ query LoadUsers($limit: Int!, $offset: Int!) {
 }
 `;
 
-export default interface User {
-  id: string;
-  email: string;
-  lastName: string;
-  name: string;
-  phone: string;
-}
-
 export interface PageInfo {
   limit: number;
   offset: number;
 }
 
 export interface UserResult {
-  data: User[];
-  hasNextPage?: boolean;
+  data: Member[];
+  count: number;
   loading: boolean;
   fetchMore?: (info: PageInfo) => Promise<ApolloQueryResult<any>>
 }
 
-const useUsers = (initialInfo: PageInfo): UserResult => {
+const useMembers = (initialInfo: PageInfo): UserResult => {
   const {
     data,
     loading,
     fetchMore,
-  } = useQuery(LoadUsers, {
+  } = useQuery(LoadMembers, {
     variables: {
       ...initialInfo
     }
   });
 
-  if (loading || !data || !data.Users) return {
+  if (loading || !data || !data.Members) return {
     loading,
-    data: []
+    data: [],
+    count: 0
   };
 
   const loadMore = (info: PageInfo) => {
     return fetchMore({
-      query: LoadUsers,
+      query: LoadMembers,
       variables: {
         ...info
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        const newEdges = fetchMoreResult.Users.edges;
+        const newEdges = fetchMoreResult.Members.edges;
 
         return newEdges.length
           ? {
-            Users: {
-              __typename: previousResult.Users.__typename,
-              edges: [...previousResult.Users.edges, ...newEdges],
+            Members: {
+              __typename: previousResult.Members.__typename,
+              edges: [...previousResult.Members.edges, ...newEdges],
               aggregate: fetchMoreResult.aggregate.count
             },
           }
@@ -78,13 +72,13 @@ const useUsers = (initialInfo: PageInfo): UserResult => {
   }
 
   return {
-    data: data.Users.edges.map(({ node }) => node),
-    hasNextPage: data.Users.aggregate.count,
+    data: data.Members.edges.map(({ node }) => node),
+    count: data.Members.aggregate.count,
     loading,
     fetchMore: loadMore
   }
 }
 
 export {
-  useUsers
+  useMembers
 };

@@ -1,25 +1,27 @@
 import { Paper } from '@material-ui/core';
-import { useUsers } from '../hooks/load-users.hooks';
+import { useMembers } from '../hooks/load-members.hooks';
 
 import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
-import { useAddOrg, OrgInput } from '../hooks/add-orgs.hooks';
+import { useInsertUser } from '../hooks/insert-members.hooks';
+import { UserInput } from '../hooks/types';
 
-export const Users = (): JSX.Element => {
-    const { loading, data, fetchMore, hasNextPage } = useUsers({
-        limit: 5,
+export const Members = (): JSX.Element => {
+    const { loading, data, fetchMore, count } = useMembers({
+        limit: 100,
         offset: 0
     });
-    const [addOrg] = useAddOrg();
+    const [insertUser] = useInsertUser();
     const ref = useRef();
 
     const handleOnPageChange = () => {
         const { currentPage, pageSize } = (ref as any).current.state;
-        const shouldFetch = hasNextPage && currentPage > Math.floor(data.length / pageSize) - 2;
+        const hasNextPage = count > currentPage * pageSize;
+        const shouldFetch = hasNextPage && data.length < currentPage * pageSize;
         if (shouldFetch) {
             fetchMore({
                 limit: pageSize,
-                offset: currentPage
+                offset: currentPage + 1
             });
         }
     }
@@ -28,10 +30,12 @@ export const Users = (): JSX.Element => {
         <Paper>
             <MaterialTable
                 tableRef={ref}
-                title="Organizations"
+                title="Members"
                 columns={[
-                    { title: 'Name', field: 'name' },
-                    { title: 'Enabled', field: 'enabled', type: 'boolean' }
+                    { title: 'Id', field: 'id' },
+                    { title: 'Email', field: 'email' },
+                    { title: 'name', field: 'name' },
+                    { title: 'phone', field: 'phone' },
                 ]}
                 options={
                     {
@@ -43,15 +47,9 @@ export const Users = (): JSX.Element => {
                 onChangePage={handleOnPageChange}
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
-                    onRowAdd: (newData: OrgInput) =>
+                    onRowAdd: (newUser: UserInput) =>
                         new Promise(resolve => {
-                            addOrg({
-                                variables: {
-                                    org: {
-                                        ...newData
-                                    }
-                                }
-                            })
+                            insertUser(newUser)
                                 .then(resolve)
                                 .catch(console.error);
                         }),

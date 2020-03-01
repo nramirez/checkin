@@ -85,7 +85,7 @@
       "opacity": 100,
       "seed": 1046615431,
       "points": [],
-      "text": "Users",
+      "text": "Members",
       "font": "20px Virgil",
       "baseline": 22
     },
@@ -158,7 +158,7 @@
       "opacity": 100,
       "seed": 159960921,
       "points": [],
-      "text": "Users in an specific organization",
+      "text": "Members in an specific organization",
       "font": "20px Virgil",
       "baseline": 22
     },
@@ -196,7 +196,7 @@
       "opacity": 100,
       "seed": 2031174159,
       "points": [],
-      "text": "Admin can create recurring events or a one-time event\n to allow users to check-in in that class",
+      "text": "Admin can create recurring events or a one-time event\n to allow members to check-in in that class",
       "font": "20px Virgil",
       "baseline": 53
     },
@@ -311,7 +311,7 @@
       "opacity": 100,
       "seed": 1246306195,
       "points": [],
-      "text": "Simple Table to Manage Users/Orgs/events",
+      "text": "Simple Table to Manage Members/Orgs/events",
       "font": "20px Virgil",
       "baseline": 22
     },
@@ -462,7 +462,7 @@
       "opacity": 100,
       "seed": 267885616,
       "points": [],
-      "text": "I'm thinking to link the users by phone number\nwhich is a unique identifier per person, I think\nI could later with emails services, but for now,\nlet's just do phone number",
+      "text": "I'm thinking to link the members by phone number\nwhich is a unique identifier per person, I think\nI could later with emails services, but for now,\nlet's just do phone number",
       "font": "20px Virgil",
       "baseline": 115
     },
