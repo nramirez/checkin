@@ -43,7 +43,7 @@ const useMembers = (initialInfo: PageInfo): UserResult => {
     }
   });
 
-  if (loading || !data || !data.Members) return {
+  if (!data) return {
     loading,
     data: [],
     count: 0
@@ -56,14 +56,14 @@ const useMembers = (initialInfo: PageInfo): UserResult => {
         ...info
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        const newEdges = fetchMoreResult.Members.edges;
+        const newNodes = fetchMoreResult.Members.nodes;
 
-        return newEdges.length
+        return newNodes.length
           ? {
             Members: {
-              __typename: previousResult.Members.__typename,
-              edges: [...previousResult.Members.edges, ...newEdges],
-              aggregate: fetchMoreResult.aggregate.count
+              __typename: previousResult.__typename,
+              nodes: [...previousResult.Members_aggregate.nodes, ...newNodes],
+              aggregate: fetchMoreResult.Members_aggregate.aggregate.count
             },
           }
           : previousResult
@@ -71,9 +71,11 @@ const useMembers = (initialInfo: PageInfo): UserResult => {
     })
   }
 
+  console.log('nodes', data.Members_aggregate.nodes);
+
   return {
-    data: data.Members.edges.map(({ node }) => node),
-    count: data.Members.aggregate.count,
+    data: data.Members_aggregate.nodes.map(node => node),
+    count: data.Members_aggregate.aggregate.count,
     loading,
     fetchMore: loadMore
   }

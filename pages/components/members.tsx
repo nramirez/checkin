@@ -32,7 +32,6 @@ export const Members = (): JSX.Element => {
                 tableRef={ref}
                 title="Members"
                 columns={[
-                    { title: 'Id', field: 'id' },
                     { title: 'Email', field: 'email' },
                     { title: 'name', field: 'name' },
                     { title: 'phone', field: 'phone' },
