@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { MemberInput } from './types';
+import { MemberInput } from '../types';
 
 const INSERT_MEMBERS = gql`
 mutation InsertMember(

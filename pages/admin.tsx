@@ -4,7 +4,7 @@ import { Navbar, Page } from './components/navbar';
 import { Fragment, useState, Suspense } from 'react';
 import { TabPanel } from './components/TabPanel';
 import withApollo from '../lib/withAppollo';
-import { Events } from './components/events';
+import { OrgEvents } from './components/OrgEvents';
 import { Members } from './components/members';
 
 const AdminPage: NextPage<{}> = () => {
@@ -20,7 +20,7 @@ const AdminPage: NextPage<{}> = () => {
             <Members />
         </TabPanel>
         <TabPanel value={value} index={Page.Events}>
-            <Events />
+            <OrgEvents />
         </TabPanel>
     </Fragment>;
 }

@@ -1,19 +1,18 @@
-import { Paper } from '@material-ui/core';
-import { useMembers } from '../hooks/members/load-members.hooks';
+import { useOrgEvents } from "../hooks/events/load-org-events.hooks";
+import { useRef } from "react";
+import { Paper } from "@material-ui/core";
+import MaterialTable from "material-table";
+import { useInsertOrgEvent } from "../hooks/events/insert-org-events.hooks";
+import { OrgEventInput, OrgEvent } from "../hooks/types";
+import { useUpdateOrgEvent } from "../hooks/events/update-org-event.hooks";
 
-import React, { useRef } from 'react';
-import MaterialTable from 'material-table';
-import { useInsertMember } from '../hooks/members/insert-members.hooks';
-import { MemberInput, Member } from '../hooks/types';
-import { useUpdateMember } from '../hooks/members/update-member.hooks';
-
-export const Members = (): JSX.Element => {
-    const { loading, data, fetchMore, count } = useMembers({
+export const OrgEvents = (): JSX.Element => {
+    const { loading, data, fetchMore, count } = useOrgEvents({
         limit: 100,
         offset: 0
     });
-    const [insertMember] = useInsertMember();
-    const [updateMember] = useUpdateMember();
+    const [insertOrgEvent] = useInsertOrgEvent();
+    const [updateOrgEvent] = useUpdateOrgEvent();
     const ref = useRef();
 
     const handleOnPageChange = () => {
@@ -34,10 +33,11 @@ export const Members = (): JSX.Element => {
                 tableRef={ref}
                 title="Members"
                 columns={[
-                    { title: 'Email', field: 'email' },
                     { title: 'Name', field: 'name' },
-                    { title: 'Last Name', field: 'lastName' },
-                    { title: 'Phone', field: 'phoneNumber' },
+                    { title: 'Details', field: 'details' },
+                    { title: 'Location', field: 'location' },
+                    { title: 'Start', field: 'startTime' },
+                    { title: 'End', field: 'endTime' },
                 ]}
                 options={
                     {
@@ -49,8 +49,8 @@ export const Members = (): JSX.Element => {
                 onChangePage={handleOnPageChange}
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
-                    onRowAdd: (newMemberInput: MemberInput) => insertMember(newMemberInput),
-                    onRowUpdate: (newData: Member) => updateMember(newData.id, newData)
+                    onRowAdd: (input: OrgEventInput) => insertOrgEvent(input),
+                    onRowUpdate: (newData: OrgEvent) => updateOrgEvent(newData.id, newData)
                 }}
             />
         </Paper>

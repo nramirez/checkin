@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { ApolloQueryResult } from 'apollo-client/core/types';
-import { Member } from './types';
+import { Member, PageInfo, PagingResult } from '../types';
 
 const LoadMembers = gql`
 query LoadMembers($limit: Int!, $offset: Int!) {
@@ -20,19 +19,7 @@ query LoadMembers($limit: Int!, $offset: Int!) {
 }
 `;
 
-export interface PageInfo {
-  limit: number;
-  offset: number;
-}
-
-export interface MemberResult {
-  data: Member[];
-  count: number;
-  loading: boolean;
-  fetchMore?: (info: PageInfo) => Promise<ApolloQueryResult<any>>
-}
-
-const useMembers = (initialInfo: PageInfo): MemberResult => {
+const useMembers = (initialInfo: PageInfo): PagingResult<Member> => {
   const {
     data,
     loading,
