@@ -32,7 +32,7 @@ export interface OrgEventInput {
 
 export interface OrgEvent {
     id: string;
-    name: string;
+    description: string;
     details?: string;
     location: Geography;
     startTime: string;

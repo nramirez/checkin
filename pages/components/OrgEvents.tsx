@@ -33,7 +33,7 @@ export const OrgEvents = (): JSX.Element => {
                 tableRef={ref}
                 title="Members"
                 columns={[
-                    { title: 'Name', field: 'name' },
+                    { title: 'Description', field: 'description' },
                     { title: 'Details', field: 'details' },
                     { title: 'Location', field: 'location' },
                     { title: 'Start', field: 'startTime' },
