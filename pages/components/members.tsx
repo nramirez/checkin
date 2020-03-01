@@ -5,6 +5,7 @@ import React, { useRef } from 'react';
 import MaterialTable from 'material-table';
 import { useInsertMember } from '../hooks/insert-members.hooks';
 import { MemberInput, Member } from '../hooks/types';
+import { useUpdateMember } from '../hooks/update-member.hooks';
 
 export const Members = (): JSX.Element => {
     const { loading, data, fetchMore, count } = useMembers({
@@ -12,6 +13,7 @@ export const Members = (): JSX.Element => {
         offset: 0
     });
     const [insertMember] = useInsertMember();
+    const [updateMember] = useUpdateMember();
     const ref = useRef();
 
     const handleOnPageChange = () => {
@@ -35,7 +37,7 @@ export const Members = (): JSX.Element => {
                     { title: 'Email', field: 'email' },
                     { title: 'Name', field: 'name' },
                     { title: 'Last Name', field: 'lastName' },
-                    { title: 'Phone', field: 'phone' },
+                    { title: 'Phone', field: 'phoneNumber' },
                 ]}
                 options={
                     {
@@ -47,39 +49,15 @@ export const Members = (): JSX.Element => {
                 onChangePage={handleOnPageChange}
                 onChangeRowsPerPage={handleOnPageChange}
                 editable={{
-                    onRowAdd: (newMemberInput: MemberInput) =>
+                    onRowAdd: (newMemberInput: MemberInput) => insertMember(newMemberInput),
+                    onRowUpdate: (newData: Member, oldData: Member) =>
                         new Promise((resolve, reject) => {
-                            insertMember(newMemberInput)
+                            updateMember(newData.id, newData)
                                 .then((response) => {
                                     console.log(response);
                                     resolve(response)
-                                })
-                                .catch(reject);
-                        }),
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve();
-                                // if (oldData) {
-                                //     setState(prevState => {
-                                //         const data = [...prevState.data];
-                                //         data[data.indexOf(oldData)] = newData;
-                                //         return { ...prevState, data };
-                                //     });
-                                // }
-                            }, 600);
-                        }),
-                    onRowDelete: oldData =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve();
-                                // setState(prevState => {
-                                //     const data = [...prevState.data];
-                                //     data.splice(data.indexOf(oldData), 1);
-                                //     return { ...prevState, data };
-                                // });
-                            }, 600);
-                        }),
+                                }).catch(reject);
+                        })
                 }}
             />
         </Paper>

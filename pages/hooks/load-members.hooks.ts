@@ -14,7 +14,7 @@ query LoadMembers($limit: Int!, $offset: Int!) {
       id
       lastName
       name
-      phone
+      phoneNumber
     }
   }
 }
@@ -25,14 +25,14 @@ export interface PageInfo {
   offset: number;
 }
 
-export interface UserResult {
+export interface MemberResult {
   data: Member[];
   count: number;
   loading: boolean;
   fetchMore?: (info: PageInfo) => Promise<ApolloQueryResult<any>>
 }
 
-const useMembers = (initialInfo: PageInfo): UserResult => {
+const useMembers = (initialInfo: PageInfo): MemberResult => {
   const {
     data,
     loading,

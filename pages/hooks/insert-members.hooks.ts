@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { MemberInput } from './types';
 
 const INSERT_MEMBERS = gql`
-mutation InsertUser(
+mutation InsertMember(
   $objects: [Members_insert_input!]!
 ) {
   insert_Members(objects: $objects) {
@@ -12,7 +12,7 @@ mutation InsertUser(
       email
       lastName
       name
-      phone
+      phoneNumber
     }
   }
 }

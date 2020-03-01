@@ -462,7 +462,7 @@
       "opacity": 100,
       "seed": 267885616,
       "points": [],
-      "text": "I'm thinking to link the members by phone number\nwhich is a unique identifier per person, I think\nI could later with emails services, but for now,\nlet's just do phone number",
+      "text": "I'm thinking to link the members by phoneNumber number\nwhich is a unique identifier per person, I think\nI could later with emails services, but for now,\nlet's just do phoneNumber number",
       "font": "20px Virgil",
       "baseline": 115
     },

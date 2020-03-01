@@ -3,12 +3,12 @@ export interface Member {
     email?: string;
     lastName: string;
     name: string;
-    phone?: string;
+    phoneNumber?: string;
 }
 
 export interface MemberInput {
     email?: string;
     lastName: string;
     name: string;
-    phone?: string;
+    phoneNumber?: string;
 }
