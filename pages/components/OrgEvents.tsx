@@ -5,6 +5,7 @@ import MaterialTable from "material-table";
 import { useInsertOrgEvent } from "../hooks/events/insert-org-events.hooks";
 import { OrgEventInput, OrgEvent } from "../hooks/types";
 import { useUpdateOrgEvent } from "../hooks/events/update-org-event.hooks";
+import { LocationAutoComplete } from "./locationAutoComplete";
 
 export const OrgEvents = (): JSX.Element => {
     const { loading, data, fetchMore, count } = useOrgEvents({
@@ -35,7 +36,7 @@ export const OrgEvents = (): JSX.Element => {
                 columns={[
                     { title: 'Description', field: 'description' },
                     { title: 'Details', field: 'details' },
-                    { title: 'Location', field: 'location' },
+                    { title: 'Location', field: 'location', editComponent: LocationAutoComplete },
                     { title: 'Start', field: 'startTime' },
                     { title: 'End', field: 'endTime' },
                 ]}

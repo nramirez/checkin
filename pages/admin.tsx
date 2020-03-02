@@ -1,8 +1,8 @@
 
 import { NextPage } from 'next';
 import { Navbar, Page } from './components/navbar';
-import { Fragment, useState, Suspense } from 'react';
-import { TabPanel } from './components/TabPanel';
+import { Fragment, useState } from 'react';
+import { TabPanel } from './components/tabPanel';
 import withApollo from '../lib/withAppollo';
 import { OrgEvents } from './components/orgEvents';
 import { Members } from './components/members';
