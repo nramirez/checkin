@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const loadScript = (src: string, position: HTMLElement, id: string) => {
+let loadScript = (src: string, position: HTMLElement | null, id: string) => {
     if (!position) {
         return;
     }
@@ -27,15 +27,31 @@ const loadScript = (src: string, position: HTMLElement, id: string) => {
 }
 const autocompleteService = { current: null };
 
-export const LocationAutoComplete = (): JSX.Element => {
+interface PlaceType {
+    id: string;
+    description: string;
+    structured_formatting: {
+        main_text: string;
+        secondary_text: string;
+        main_text_matched_substrings: [
+            {
+                offset: number;
+                length: number;
+            }
+        ];
+    };
+}
+
+export const LocationAutoComplete = (
+    { value, onChange }
+): JSX.Element => {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState('');
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState<PlaceType[]>([]);
     const loaded = useRef(false);
 
-    if (typeof window !== 'undefined' && !loaded.current) {
+    if (window && !loaded.current) {
         if (!document.querySelector('#google-maps')) {
-            // TODO: Invalidate this key and restrict to only be used from the site
             loadScript(
                 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDq44oNiE57db3mcWI8Noy3PY_snjxhrAo&libraries=places',
                 document.querySelector('head'),
@@ -48,8 +64,8 @@ export const LocationAutoComplete = (): JSX.Element => {
 
     const fetch = useMemo(
         () =>
-            throttle((request, callback) => {
-                autocompleteService.current.getPlacePredictions(request, callback);
+            throttle((request: { input: string }, callback: (results?: PlaceType[]) => void) => {
+                (autocompleteService.current as any).getPlacePredictions(request, callback);
             }, 200),
         [],
     );
@@ -61,15 +77,15 @@ export const LocationAutoComplete = (): JSX.Element => {
             autocompleteService.current = new window.google.maps.places.AutocompleteService();
         }
         if (!autocompleteService.current) {
-            return undefined;
+            return;
         }
 
         if (inputValue === '') {
             setOptions([]);
-            return undefined;
+            return;
         }
 
-        fetch({ input: inputValue }, results => {
+        fetch({ input: inputValue }, (results?: PlaceType[]) => {
             if (active) {
                 setOptions(results || []);
             }
@@ -80,9 +96,12 @@ export const LocationAutoComplete = (): JSX.Element => {
         };
     }, [inputValue, fetch]);
 
-    const handleChange = event => {
-        setInputValue(event.target.value);
-    };
+    let onAutoCompleteChange = (e, newValue) => {
+        // TODO: 
+        // How to extract the location?
+        // Should we do a geo query to know if the user is in the same area or should we use google maps?
+        console.log(newValue);
+    }
 
     return <Autocomplete
         id="google-map-demo"
@@ -92,33 +111,34 @@ export const LocationAutoComplete = (): JSX.Element => {
         autoComplete
         includeInputInList
         disableOpenOnFocus
+        onChange={onAutoCompleteChange}
         renderInput={params => (
             <TextField
                 {...params}
                 label="Add a location"
-                onChange={handleChange}
+                onChange={e => setInputValue(e.target.value)}
             />
         )}
         renderOption={option => {
             const matches = option.structured_formatting.main_text_matched_substrings;
             const parts = parse(
                 option.structured_formatting.main_text,
-                matches.map(match => [match.offset, match.offset + match.length]),
+                matches.map((match: any) => [match.offset, match.offset + match.length]),
             );
 
             return (
-                <Grid container alignItems="center">
-                    <Grid item>
+                <Grid container alignItems="center" data-id={option.id}>
+                    <Grid item data-id={option.id}>
                         <LocationOnIcon className={classes.icon} />
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs data-id={option.id}>
                         {parts.map((part, index) => (
-                            <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                            <span data-id={option.id} key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
                                 {part.text}
                             </span>
                         ))}
 
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography variant="body2" color="textSecondary" data-id={option.id}>
                             {option.structured_formatting.secondary_text}
                         </Typography>
                     </Grid>

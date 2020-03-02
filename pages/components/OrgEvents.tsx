@@ -37,11 +37,12 @@ export const OrgEvents = (): JSX.Element => {
             <Paper>
                 <MaterialTable
                     tableRef={ref}
-                    title="Members"
+                    title="Events"
                     columns={[
+                        { title: 'Title', field: 'title' },
                         { title: 'Description', field: 'description' },
-                        { title: 'Details', field: 'details' },
-                        { title: 'Location', field: 'location', editComponent: LocationAutoComplete },
+                        { title: 'Location', field: 'location', editComponent: props => 
+                            <LocationAutoComplete  value={props.value} onChange={props.onChange} />},
                         {
                             title: 'Start', field: 'startTime',
                             editComponent: props =>
@@ -62,7 +63,7 @@ export const OrgEvents = (): JSX.Element => {
                                     ampm={false}
                                     label="End Time"
                                     value={props.value}
-                                    onChange={props.onChange}
+                                    onChange={e => props.onChange}
                                     disablePast
                                     format="yyyy/MM/dd HH:mm" />
 

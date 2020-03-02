@@ -24,7 +24,7 @@ export interface Geography {
 
 export interface OrgEventInput {
     description: string;
-    details?: string;
+    description?: string;
     location: Geography;
     startTime: string;
     endTime: string;
@@ -33,7 +33,7 @@ export interface OrgEventInput {
 export interface OrgEvent {
     id: string;
     description: string;
-    details?: string;
+    description?: string;
     location: Geography;
     startTime: string;
     endTime: string;

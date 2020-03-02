@@ -8,7 +8,7 @@ mutation UpdateOrgEvent($id: uuid!, $set: OrgEvents_set_input!) {
       returning {
         id
         description
-        details
+        description
         location
         startTime
         endTime

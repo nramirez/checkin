@@ -11,7 +11,7 @@ query LoadOrgEvents($limit: Int!, $offset: Int!) {
     nodes {
       id
       description
-      details
+      description
       location
       startTime
       endTime

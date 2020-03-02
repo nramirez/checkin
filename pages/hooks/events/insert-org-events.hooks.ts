@@ -10,7 +10,7 @@ mutation InsertOrgEvent(
     returning {
       id
       description
-      details
+      description
       location
       startTime
       endTime
