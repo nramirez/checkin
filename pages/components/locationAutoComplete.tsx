@@ -14,22 +14,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-let loadScript = (src: string, position: HTMLElement | null, id: string) => {
-    if (!position) {
-        return;
-    }
-
-    const script = document.createElement('script');
-    script.setAttribute('async', '');
-    script.setAttribute('id', id);
-    script.src = src;
-    position.appendChild(script);
-}
-const autocompleteService = { current: null };
-
 interface PlaceType {
     id: string;
     description: string;
+    place_id: string;
     structured_formatting: {
         main_text: string;
         secondary_text: string;
@@ -42,30 +30,38 @@ interface PlaceType {
     };
 }
 
+interface GeoPlace {
+    location: {
+        lat: number;
+        lng: number;
+    },
+    location_type: string;
+    viewport: {
+        northeast: {
+            lat: number;
+            lng: number;
+        },
+        southwest: {
+            lat: number;
+            lng: number;
+        }
+    }
+}
+
 export const LocationAutoComplete = (
     { value, onChange }
 ): JSX.Element => {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState<PlaceType[]>([]);
-    const loaded = useRef(false);
-
-    if (window && !loaded.current) {
-        if (!document.querySelector('#google-maps')) {
-            loadScript(
-                'https://maps.googleapis.com/maps/api/js?key=AIzaSyDq44oNiE57db3mcWI8Noy3PY_snjxhrAo&libraries=places',
-                document.querySelector('head'),
-                'google-maps',
-            );
-        }
-
-        loaded.current = true;
-    }
 
     const fetch = useMemo(
         () =>
-            throttle((request: { input: string }, callback: (results?: PlaceType[]) => void) => {
-                (autocompleteService.current as any).getPlacePredictions(request, callback);
+            throttle((inputValue: string, callback: (results?: PlaceType[]) => void) => {
+                window.fetch(`/api/google/places?input=${inputValue}`)
+                    .then(r => {
+                        r.json().then(callback)
+                    })
             }, 200),
         [],
     );
@@ -73,19 +69,13 @@ export const LocationAutoComplete = (
     useEffect(() => {
         let active = true;
 
-        if (!autocompleteService.current && window.google) {
-            autocompleteService.current = new window.google.maps.places.AutocompleteService();
-        }
-        if (!autocompleteService.current) {
-            return;
-        }
-
         if (inputValue === '') {
             setOptions([]);
             return;
         }
 
-        fetch({ input: inputValue }, (results?: PlaceType[]) => {
+        fetch(inputValue, (results?: PlaceType[]) => {
+            console.log(results);
             if (active) {
                 setOptions(results || []);
             }
@@ -96,11 +86,12 @@ export const LocationAutoComplete = (
         };
     }, [inputValue, fetch]);
 
-    let onAutoCompleteChange = (e, newValue) => {
-        // TODO: 
-        // How to extract the location?
-        // Should we do a geo query to know if the user is in the same area or should we use google maps?
+    let onAutoCompleteChange = (e, newValue: PlaceType) => {
         console.log(newValue);
+        window.fetch(`/api/google/geocode?place_id=${newValue.place_id}`)
+            .then(r => r.json().then((results: GeoPlace[]) => {
+                console.log(results);
+            }))
     }
 
     return <Autocomplete
