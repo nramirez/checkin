@@ -15,28 +15,21 @@ export interface MemberInput {
     phoneNumber?: string;
 }
 
-export interface Geography {
-    point: {
-        type: string,
-        coordinates: [number, number]
-    }
-}
-
 export interface OrgEventInput {
-    description: string;
+    title: string;
     description?: string;
-    location: Geography;
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
+    place: Place;
 }
 
-export interface OrgEvent {
+export interface OrgEvent extends OrgEventInput {
     id: string;
+}
+
+export interface Place {
+    place_id: string;
     description: string;
-    description?: string;
-    location: Geography;
-    startTime: string;
-    endTime: string;
 }
 
 export interface PageInfo {

@@ -10,11 +10,11 @@ query LoadOrgEvents($limit: Int!, $offset: Int!) {
     }
     nodes {
       id
+      title
       description
-      description
-      location
       startTime
       endTime
+      place
     }
   }
 }

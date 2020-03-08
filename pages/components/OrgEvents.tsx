@@ -1,21 +1,23 @@
+import { useRef } from "react";
+
 import { useOrgEvents } from "../hooks/events/load-org-events.hooks";
-import { useRef, useState } from "react";
-import { Paper } from "@material-ui/core";
-import MaterialTable from "material-table";
 import { useInsertOrgEvent } from "../hooks/events/insert-org-events.hooks";
 import { OrgEventInput, OrgEvent } from "../hooks/types";
 import { useUpdateOrgEvent } from "../hooks/events/update-org-event.hooks";
-import { LocationAutoComplete } from "./locationAutoComplete";
-import { KeyboardDateTimePicker } from "@material-ui/pickers";
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+
+import { Paper } from "@material-ui/core";
+import MaterialTable from "material-table";
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
+import { format } from 'date-fns';
+
+import { LocationAutoComplete } from "./locationAutoComplete";
 
 export const OrgEvents = (): JSX.Element => {
     const { loading, data, fetchMore, count } = useOrgEvents({
         limit: 100,
         offset: 0
     });
-    const [selectedDate, handleDateChange] = useState(new Date("2018-01-01T00:00:00.000Z"));
     const [insertOrgEvent] = useInsertOrgEvent();
     const [updateOrgEvent] = useUpdateOrgEvent();
     const ref = useRef();
@@ -41,8 +43,11 @@ export const OrgEvents = (): JSX.Element => {
                     columns={[
                         { title: 'Title', field: 'title' },
                         { title: 'Description', field: 'description' },
-                        { title: 'Location', field: 'location', editComponent: props => 
-                            <LocationAutoComplete  value={props.value} onChange={props.onChange} />},
+                        {
+                            title: 'Location', field: 'place', editComponent: props =>
+                                <LocationAutoComplete value={props.value} onChange={props.onChange} />,
+                            render: value => value.place.description
+                        },
                         {
                             title: 'Start', field: 'startTime',
                             editComponent: props =>
@@ -53,7 +58,8 @@ export const OrgEvents = (): JSX.Element => {
                                     value={props.value}
                                     onChange={props.onChange}
                                     disablePast
-                                    format="yyyy/MM/dd HH:mm" />
+                                    format="yyyy/MM/dd HH:mm" />,
+                            render: row => format(new Date(row.startTime), 'MM/dd/yyyy HH:mm')
                         },
                         {
                             title: 'End', field: 'endTime',
@@ -63,10 +69,10 @@ export const OrgEvents = (): JSX.Element => {
                                     ampm={false}
                                     label="End Time"
                                     value={props.value}
-                                    onChange={e => props.onChange}
+                                    onChange={props.onChange}
                                     disablePast
-                                    format="yyyy/MM/dd HH:mm" />
-
+                                    format="yyyy/MM/dd HH:mm" />,
+                            render: row => format(new Date(row.endTime), 'MM/dd/yyyy HH:mm')
                         },
                     ]}
                     options={

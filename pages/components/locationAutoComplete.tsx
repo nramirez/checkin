@@ -1,10 +1,11 @@
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, makeStyles, Grid, Typography } from '@material-ui/core';
+import { makeStyles, TextField, Grid, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import throttle from 'lodash/throttle';
+import { Place } from '../hooks/types';
 import parse from 'autosuggest-highlight/parse';
 
 const useStyles = makeStyles(theme => ({
@@ -30,29 +31,16 @@ interface PlaceType {
     };
 }
 
-interface GeoPlace {
-    location: {
-        lat: number;
-        lng: number;
-    },
-    location_type: string;
-    viewport: {
-        northeast: {
-            lat: number;
-            lng: number;
-        },
-        southwest: {
-            lat: number;
-            lng: number;
-        }
-    }
+interface LocationAutoCompleteProps {
+    value: Place;
+    onChange: (place: Place) => void;
 }
 
 export const LocationAutoComplete = (
-    { value, onChange }
+    { value, onChange }: LocationAutoCompleteProps
 ): JSX.Element => {
     const classes = useStyles();
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(value ? value.description : '');
     const [options, setOptions] = useState<PlaceType[]>([]);
 
     const fetch = useMemo(
@@ -75,7 +63,6 @@ export const LocationAutoComplete = (
         }
 
         fetch(inputValue, (results?: PlaceType[]) => {
-            console.log(results);
             if (active) {
                 setOptions(results || []);
             }
@@ -87,11 +74,10 @@ export const LocationAutoComplete = (
     }, [inputValue, fetch]);
 
     let onAutoCompleteChange = (e, newValue: PlaceType) => {
-        console.log(newValue);
-        window.fetch(`/api/google/geocode?place_id=${newValue.place_id}`)
-            .then(r => r.json().then((results: GeoPlace[]) => {
-                console.log(results);
-            }))
+        onChange({
+            description: newValue.description,
+            place_id: newValue.place_id
+        });
     }
 
     return <Autocomplete

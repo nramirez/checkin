@@ -9,11 +9,11 @@ mutation InsertOrgEvent(
   insert_OrgEvents(objects: $objects) {
     returning {
       id
+      title
       description
-      description
-      location
       startTime
       endTime
+      place
     }
   }
 }

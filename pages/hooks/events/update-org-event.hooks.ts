@@ -7,11 +7,11 @@ mutation UpdateOrgEvent($id: uuid!, $set: OrgEvents_set_input!) {
     update_OrgEvents(_set: $set, where: {id: {_eq: $id}}) {
       returning {
         id
+        title
         description
-        description
-        location
         startTime
         endTime
+        place
       }
     }
   }
